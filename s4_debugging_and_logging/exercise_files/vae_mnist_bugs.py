@@ -13,8 +13,14 @@ from torchvision.utils import save_image
 
 # Model Hyperparameters
 dataset_path = 'datasets'
-cuda = True
-DEVICE = torch.device("cuda" if cuda else "cpu")
+
+#Device error: Check whether GPU is available prior setting the device
+if torch.cuda.is_available():
+    cuda = True
+    DEVICE = torch.device("cuda")
+else:
+    cuda = False
+    DEVICE = torch.device("cpu") 
 batch_size = 100
 x_dim  = 784
 hidden_dim = 400
@@ -61,7 +67,8 @@ class Decoder(nn.Module):
     def __init__(self, latent_dim, hidden_dim, output_dim):
         super(Decoder, self).__init__()
         self.FC_hidden = nn.Linear(latent_dim, hidden_dim)
-        self.FC_output = nn.Linear(latent_dim, output_dim)
+        #Shape bug2: Input to the FC_output layer is the hidden_dim, not the latent_dim
+        self.FC_output = nn.Linear(hidden_dim, output_dim)
         
     def forward(self, x):
         h     = torch.relu(self.FC_hidden(x))
@@ -104,6 +111,10 @@ model.train()
 for epoch in range(epochs):
     overall_loss = 0
     for batch_idx, (x, _) in enumerate(train_loader):
+        #Train bug 3: the gradient is not reset to zero before each batch
+        optimizer.zero_grad()
+
+
         x = x.view(batch_size, x_dim)
         x = x.to(DEVICE)
 
@@ -111,7 +122,6 @@ for epoch in range(epochs):
         loss = loss_function(x, x_hat, mean, log_var)
         
         overall_loss += loss.item()
-        
         loss.backward()
         optimizer.step()
     print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", overall_loss / (batch_idx*batch_size))    
