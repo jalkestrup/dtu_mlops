@@ -11,17 +11,30 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 from torchvision.utils import save_image
 from torch.profiler import profile, record_function, ProfilerActivity
+import wandb
+
+print(torch.__version__)
+
+from omegaconf import OmegaConf
+# loading
+config = OmegaConf.load('./s4_debugging_and_logging/exercise_files/config.yaml')
 
 # Model Hyperparameters
 dataset_path = 'datasets'
 cuda = False
 DEVICE = torch.device("cuda" if cuda else "cpu")
-batch_size = 100
+batch_size = config.hyperparameters.batch_size
 x_dim  = 784
 hidden_dim = 400
 latent_dim = 20
-lr = 1e-3
+lr = config.hyperparameters.lr
 epochs = 1
+
+print('batch_size: ', batch_size)
+print('lr: ', lr)
+
+wandb.init(project="vae-test-3")
+wandb.config.update(config)
 
 
 # Data loading
@@ -32,6 +45,7 @@ test_dataset  = MNIST(dataset_path, transform=mnist_transform, train=False, down
 
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
 test_loader  = DataLoader(dataset=test_dataset,  batch_size=batch_size, shuffle=False)
+
 
 class Encoder(nn.Module):  
     def __init__(self, input_dim, hidden_dim, latent_dim):

@@ -11,17 +11,28 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 from torchvision.utils import save_image
 
+import wandb
+
+print(torch.__version__)
+
+from omegaconf import OmegaConf
+# loading
+config = OmegaConf.load('./s4_debugging_and_logging/exercise_files/config.yaml')
+print(f'config: {config}')
+print(f'config.hyperparameters: {config.hyperparameters}')
+
+wandb.init(project="vae-test-5")
+
 # Model Hyperparameters
 dataset_path = 'datasets'
-cuda = torch.cuda.is_available()
+cuda = False
 DEVICE = torch.device("cuda" if cuda else "cpu")
-batch_size = 100
+batch_size = config.hyperparameters.batch_size
 x_dim  = 784
-hidden_dim = 400
-latent_dim = 20
-lr = 1e-3
+hidden_dim = 100
+latent_dim = 5
+lr = config.hyperparameters.lr
 epochs = 5
-
 
 # Data loading
 mnist_transform = transforms.Compose([transforms.ToTensor()])
@@ -116,7 +127,10 @@ for epoch in range(epochs):
         overall_loss += loss.item()
         
         loss.backward()
+        
         optimizer.step()
+    avg_loss = overall_loss / (batch_idx*batch_size)
+    wandb.log({"loss": avg_loss})
     print("\tEpoch", epoch + 1, "complete!", "\tAverage Loss: ", overall_loss / (batch_idx*batch_size))    
 print("Finish!!")
 

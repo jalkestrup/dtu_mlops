@@ -1,0 +1,42 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.8.15",
+    "heartbeatAt": "2023-01-05T14:44:00.101195",
+    "startedAt": "2023-01-05T14:43:59.414273",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "c:/src/dtu_mlops/s4_debugging_and_logging/exercise_files/vae_mnist_working.py",
+    "codePath": "s4_debugging_and_logging\\exercise_files\\vae_mnist_working.py",
+    "git": {
+        "remote": "https://github.com/jalkestrup/dtu_mlops.git",
+        "commit": "9e31ebc2e3200bc1de4cdb2bcb4c966fbebc33ce"
+    },
+    "email": "jalkestrup@gmail.com",
+    "root": "C:/src/dtu_mlops",
+    "host": "DESKTOP-5L4HRN1",
+    "username": "soilsense",
+    "executable": "C:\\Users\\soilsense\\.conda\\envs\\mlops1\\python.exe",
+    "cpu_count": 2,
+    "cpu_count_logical": 4,
+    "cpu_freq": {
+        "current": 2803.0,
+        "min": 0.0,
+        "max": 2904.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2803.0,
+            "min": 0.0,
+            "max": 2904.0
+        }
+    ],
+    "disk": {
+        "total": 475.94628524780273,
+        "used": 120.57902145385742
+    },
+    "memory": {
+        "total": 15.838359832763672
+    }
+}
